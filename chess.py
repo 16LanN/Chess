@@ -267,6 +267,8 @@ class Pawn(Piece):
         if start_col == end_col and end_row == start_row + direction and board[end_row][end_col]:
             return False
         if start_col == end_col and end_row == start_row + direction:
+            if end_row == 7 or end_row == 0:
+                return True, True, True, True
             return True
         if start_col == end_col and end_row == start_row + direction*2:
             if start_row == 1:
@@ -288,13 +290,13 @@ class ChessBoard:
 
     def create_board(self):
         board = [[None] * 8 for _ in range(8)]
-        board[0] = [Rook('black'), Star('black'), Goose('black'), Queen('black'), King('black'), Goose('black'), Knight('black'), Rook('black')]
-        board[1] = [Pawn('black') for _ in range(8)]
-        board[6] = [Pawn('white') for _ in range(8)]
-        board[7] = [Rook('white'), Star('white'), Goose('white'), Queen('white'), King('white'), Goose('white'), Knight('white'), Rook('white')]
+        # board[0] = [Rook('black'), Star('black'), Goose('black'), Queen('black'), King('black'), Goose('black'), Knight('black'), Rook('black')]
+        # board[1] = [Pawn('black') for _ in range(8)]
+        # board[6] = [Pawn('white') for _ in range(8)]
+        # board[7] = [Rook('white'), Star('white'), Goose('white'), Queen('white'), King('white'), Goose('white'), Knight('white'), Rook('white')]
         
-        # board[0] = [Rook('white'), King('black'), None, None, None, None, None, None]
-        # board[7] = [None, King('white'), None, None, None, None, None, None]
+        board[1] = [Pawn('white'), King('black'), None, None, None, None, None, None]
+        board[6] = [Pawn('black'), King('white'), None, None, None, None, None, None]
 
         # board[0] = [King('black'), Star('white'), Rook('black'), None, None, None, None, None]
         # board[7] = [Star('black'), King('white'), Rook('white'), None, None, None, None, None]
@@ -403,6 +405,13 @@ class ChessGame:
                     self.board.board[start_pos[0]][start_pos[1]] = pieces[random]
                     return True
                 
+                elif len(str(piece.is_valid_move(self.board.board, start_pos, end_pos)).split()) == 4:
+                    choose_piece = int(input("Выберите фигуру (1: Queen, 2: Rook, 3: Bishop, 4: Knight, 5: Goose, 6: Star): "))
+                    pieces = [Queen(self.turn), Rook(self.turn), Bishop(self.turn), Knight(self.turn), Goose(self.turn), Star(self.turn)]
+                    self.board.board[end_pos[0]][end_pos[1]] = pieces[choose_piece-1]
+                    self.board.board[start_pos[0]][start_pos[1]] = None
+                    return True
+
                 else:
                     self.board.board[end_pos[0]][end_pos[1]] = piece
                     self.board.board[start_pos[0]][start_pos[1]] = None
